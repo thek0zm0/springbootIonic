@@ -1,12 +1,20 @@
 package com.lucasmoraes.springbootIonic.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Entity
 public class Category implements Serializable
 {
     // Atributos básicos
     private static final long serialVersionUID = 1L;
+    @Id
+    // Definindo estratégia de geração automática para chaves primárias
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
 
