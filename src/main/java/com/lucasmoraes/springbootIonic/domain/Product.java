@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Category implements Serializable
+public class Product implements Serializable
 {
     // Atributos básicos
     private static final long serialVersionUID = 1L;
@@ -16,21 +16,27 @@ public class Category implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    private Double price;
 
     // Associações
-    // Uma categoria tem vários produtos, conforme diagrama
+    // O produto tem 1 ou mais categorias
 
-    @ManyToMany(mappedBy = "categories")
-    private List<Product> products = new ArrayList<>();
+    // No JPA, quando temos lista nos dois lados, utilizamos ManyToMany
+    // No jointable, iremos definir a tabela intermediária que fara o MuitosParaMuitos
 
-    // Construtor vazio
-    public Category(){}
+    @ManyToMany
+    @JoinTable(name = "PRODUCT_CATEGORY",
+               joinColumns = @JoinColumn(name = "product_id"),
+               inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories = new ArrayList<>();
 
-    // Construtor com argumentos
-    public Category(Integer id, String name)
+    public Product(){}
+
+    public Product(Integer id, String name, Double price)
     {
         this.id = id;
         this.name = name;
+        this.price = price;
     }
 
     public Integer getId()
@@ -53,25 +59,33 @@ public class Category implements Serializable
         this.name = name;
     }
 
-    public List<Product> getProducts()
+    public Double getPrice()
     {
-        return products;
+        return price;
     }
 
-    public void setProducts(List<Product> products)
+    public void setPrice(Double price)
     {
-        this.products = products;
+        this.price = price;
     }
 
-    // Para que dois objetos possam ser comparados pelo seu conteúdo e não sua posição na memória.
-    // Utilizamos Hash code equals
+    public List<Category> getCategories()
+    {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories)
+    {
+        this.categories = categories;
+    }
+
     @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Category category = (Category) o;
-        return Objects.equals(id, category.id);
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
     }
 
     @Override
