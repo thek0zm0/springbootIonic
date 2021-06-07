@@ -1,5 +1,6 @@
 package com.lucasmoraes.springbootIonic.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lucasmoraes.springbootIonic.domain.enums.ClientType;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Client implements Serializable
     private String cpfOrCnpj;
     private Integer type;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "client")
     private List<Adress> adresses = new ArrayList<>();
 
