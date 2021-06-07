@@ -23,11 +23,14 @@ public class Client implements Serializable
 
     @JsonManagedReference
     @OneToMany(mappedBy = "client")
-    private List<Adress> adresses = new ArrayList<>();
+    private List<Address> addresses = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "PHONES")
     private Set<String> phones = new HashSet<>();
+
+    @OneToMany(mappedBy = "client")
+    private List<Order> orders = new ArrayList<>();
 
     public Client(){}
 
@@ -90,14 +93,14 @@ public class Client implements Serializable
         this.type = type.getCod();
     }
 
-    public List<Adress> getAdresses()
+    public List<Address> getAdresses()
     {
-        return adresses;
+        return addresses;
     }
 
-    public void setAdresses(List<Adress> adresses)
+    public void setAdresses(List<Address> addresses)
     {
-        this.adresses = adresses;
+        this.addresses = addresses;
     }
 
     public Set<String> getPhones()
@@ -108,6 +111,16 @@ public class Client implements Serializable
     public void setPhones(Set<String> phones)
     {
         this.phones = phones;
+    }
+
+    public List<Order> getOrders()
+    {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders)
+    {
+        this.orders = orders;
     }
 
     @Override

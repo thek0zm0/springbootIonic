@@ -2,12 +2,14 @@ package com.lucasmoraes.springbootIonic;
 
 import com.lucasmoraes.springbootIonic.domain.*;
 import com.lucasmoraes.springbootIonic.domain.enums.ClientType;
+import com.lucasmoraes.springbootIonic.domain.enums.PaymentStatus;
 import com.lucasmoraes.springbootIonic.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 @SpringBootApplication
@@ -30,6 +32,12 @@ public class SpringbootIonicApplication implements CommandLineRunner
 
 	@Autowired
 	private  AdressRepository adressRepository;
+
+	@Autowired
+	private OrderRepository orderRepository;
+
+	@Autowired
+	private PaymentRepository paymentRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootIonicApplication.class, args);
@@ -87,8 +95,8 @@ public class SpringbootIonicApplication implements CommandLineRunner
 		Client cli1 = new Client(null, "Maria Silva", "maria@gmail.com", "47690859489", ClientType.PHYSICALPERSON);
 		cli1.getPhones().addAll(Arrays.asList("44558892","34908722"));
 
-		Adress adr1 = new Adress(null,"Rua flores","300","Apto 43","Jardim","09834020",cli1,ct1);
-		Adress adr2 = new Adress(null, "Avenida Matos","105","Sala 80","Centro","02832049",cli1,ct2);
+		Address adr1 = new Address(null,"Rua flores","300","Apto 43","Jardim","09834020",cli1,ct1);
+		Address adr2 = new Address(null, "Avenida Matos","105","Sala 80","Centro","02832049",cli1,ct2);
 
 		clientRepository.saveAll(Arrays.asList(cli1));
 		adressRepository.saveAll(Arrays.asList(adr1,adr2));
@@ -99,5 +107,20 @@ public class SpringbootIonicApplication implements CommandLineRunner
 
 		clientRepository.saveAll(Arrays.asList(cli1));
 		adressRepository.saveAll(Arrays.asList(adr1,adr2));
+
+		// Pedido e pagamento
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Order ord1 = new Order(null, sdf.parse("30/09/2017 10:32"), cli1, adr1);
+		Order ord2 = new Order(null, sdf.parse("30/09/2017 19:32"), cli1, adr2);
+		Payment pay1 = new CreditCardPayment(null, PaymentStatus.SETTLED, ord1, 6);
+		ord1.setPayment(pay1);
+		Payment pay2 = new BilletPayment(null, PaymentStatus.PENDENT, ord2, sdf.parse("10/09/2017 00:00"),null);
+		ord2.setPayment(pay2);
+
+		cli1.getOrders().addAll(Arrays.asList(ord1,ord2));
+
+		orderRepository.saveAll(Arrays.asList(ord1,ord2));
+		paymentRepository.saveAll(Arrays.asList(pay1,pay2));
 	}
 }

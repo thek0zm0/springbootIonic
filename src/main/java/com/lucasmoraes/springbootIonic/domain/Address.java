@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Adress implements Serializable
+public class Address implements Serializable
 {
     // Atributos básicos
     private static final long serialVersionUID = 1L;
@@ -30,9 +30,9 @@ public class Adress implements Serializable
     @JoinColumn(name = "city_id")
     private City city;
 
-    public Adress(){}
+    public Address(){}
 
-    public Adress(Integer id, String publicPlace, String number, String adjunct, String district, String cep, Client client, City city)
+    public Address(Integer id, String publicPlace, String number, String adjunct, String district, String cep, Client client, City city)
     {
         this.id = id;
         this.publicPlace = publicPlace;
@@ -129,8 +129,8 @@ public class Adress implements Serializable
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Adress adress = (Adress) o;
-        return Objects.equals(id, adress.id);
+        Address address = (Address) o;
+        return Objects.equals(id, address.id);
     }
 
     @Override
