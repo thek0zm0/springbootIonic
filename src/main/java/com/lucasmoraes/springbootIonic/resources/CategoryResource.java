@@ -4,6 +4,7 @@ import com.lucasmoraes.springbootIonic.domain.Category;
 import com.lucasmoraes.springbootIonic.dto.CategoryDto;
 import com.lucasmoraes.springbootIonic.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -64,4 +65,19 @@ public class CategoryResource
         List<CategoryDto> listDto = list.stream().map(obj -> new CategoryDto(obj)).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
+
+    // Mostrar categorias com paginacao
+    @RequestMapping(value = "/page",method = RequestMethod.GET)
+    public ResponseEntity<Page<CategoryDto>> findPage(
+            @RequestParam(value = "page",defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage",defaultValue = "24") Integer linesPerPage,
+            @RequestParam(value = "orderBy",defaultValue = "name") String orderBy,
+            @RequestParam(value = "direction",defaultValue = "ASC") String direction)
+    {
+        Page<Category> list = service.findPage(page,linesPerPage,orderBy,direction);
+        Page<CategoryDto> listDto = list.map(obj -> new CategoryDto(obj));
+        return ResponseEntity.ok().body(listDto);
+    }
+
+
 }
