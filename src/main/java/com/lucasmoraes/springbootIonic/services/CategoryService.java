@@ -2,8 +2,10 @@ package com.lucasmoraes.springbootIonic.services;
 
 import com.lucasmoraes.springbootIonic.domain.Category;
 import com.lucasmoraes.springbootIonic.repositories.CategoryRepository;
+import com.lucasmoraes.springbootIonic.services.exceptions.DataIntegrityException;
 import com.lucasmoraes.springbootIonic.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,5 +35,18 @@ public class CategoryService
     {
         find(obj.getId());
         return repository.save(obj);
+    }
+
+    public void delete(Integer id)
+    {
+        find(id);
+        try
+        {
+            repository.deleteById(id);
+        }
+        catch (DataIntegrityViolationException e)
+        {
+            throw new DataIntegrityException("Cant delete this category with products related");
+        }
     }
 }
