@@ -1,5 +1,7 @@
 package com.lucasmoraes.springbootIonic.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import java.io.Serializable;
@@ -10,6 +12,7 @@ public class OrderItem implements Serializable
 {
     // Atributos básicos
     private static final long serialVersionUID = 1L;
+    @JsonIgnore
     @EmbeddedId
     private OrderItemPk id = new OrderItemPk();
     private Double discount;
@@ -28,6 +31,7 @@ public class OrderItem implements Serializable
         this.price = price;
     }
 
+    @JsonIgnore
     public Order getOrder()
     {
         return id.getOrder();

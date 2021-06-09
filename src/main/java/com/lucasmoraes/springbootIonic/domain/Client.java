@@ -1,5 +1,6 @@
 package com.lucasmoraes.springbootIonic.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lucasmoraes.springbootIonic.domain.enums.ClientType;
 
@@ -29,6 +30,7 @@ public class Client implements Serializable
     @CollectionTable(name = "PHONES")
     private Set<String> phones = new HashSet<>();
 
+    @JsonBackReference
     @OneToMany(mappedBy = "client")
     private List<Order> orders = new ArrayList<>();
 
