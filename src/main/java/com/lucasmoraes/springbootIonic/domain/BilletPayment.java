@@ -1,5 +1,6 @@
 package com.lucasmoraes.springbootIonic.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lucasmoraes.springbootIonic.domain.enums.PaymentStatus;
 
 import javax.persistence.Entity;
@@ -9,7 +10,10 @@ import java.util.Date;
 public class BilletPayment extends Payment
 {
     private static final long serialVersionUID = 1L;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dueDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date paymentDate;
 
     public BilletPayment(){}

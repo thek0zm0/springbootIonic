@@ -1,8 +1,6 @@
 package com.lucasmoraes.springbootIonic.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,7 +26,6 @@ public class Order implements Serializable
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
     private Payment payment;
 
-    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
@@ -98,6 +95,16 @@ public class Order implements Serializable
     public void setItems(Set<OrderItem> items)
     {
         this.items = items;
+    }
+
+    public Client getClient()
+    {
+        return client;
+    }
+
+    public void setClient(Client client)
+    {
+        this.client = client;
     }
 
     @Override

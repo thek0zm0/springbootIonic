@@ -1,6 +1,5 @@
 package com.lucasmoraes.springbootIonic.domain;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lucasmoraes.springbootIonic.domain.enums.PaymentStatus;
 
 import javax.persistence.*;
@@ -16,7 +15,7 @@ public abstract class Payment implements Serializable
     private Integer id;
     private Integer status;
 
-    @JsonBackReference
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "order_id")
     @MapsId
