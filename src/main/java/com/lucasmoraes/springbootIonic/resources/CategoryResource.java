@@ -24,19 +24,19 @@ public class CategoryResource
     @Autowired
     private CategoryService service;
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Category> find(@PathVariable Integer id)
+    {
+        Category obj = service.find(id);
+        return ResponseEntity.ok().body(obj);
+    }
+
     // Deletando Categoria
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@PathVariable Integer id)
     {
         service.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Category> find(@PathVariable Integer id)
-    {
-        Category obj = service.find(id);
-        return ResponseEntity.ok().body(obj);
     }
 
     // Implementando POST categoria (criar nova categoria)
