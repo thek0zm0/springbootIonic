@@ -17,6 +17,8 @@ public class Client implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    // Isto já resolve o problema de integridade, porém não controlamos o lançamento da excessão
+    @Column(unique = true)
     private String email;
     private String cpfOrCnpj;
     private Integer type;
