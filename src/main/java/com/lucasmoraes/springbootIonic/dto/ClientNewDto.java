@@ -1,22 +1,39 @@
 package com.lucasmoraes.springbootIonic.dto;
 
+import com.lucasmoraes.springbootIonic.services.validation.ClientInsert;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
+@ClientInsert
 public class ClientNewDto implements Serializable
 {
     // Atributos básicos
     private static final long serialVersionUID = 1L;
+    @NotEmpty(message = "Field not completed")
+    @Length(min = 5, max = 120, message = "Invalid name, min 5 characters and maximum 120 characters")
     private String name;
+    @NotEmpty(message = "Field not completed")
+    @Email(message = "Invalid email")
     private String email;
+    @NotEmpty(message = "Field not completed")
     private String cpfOrCnpj;
     private Integer type;
 
+    @NotEmpty(message = "Field not completed")
     private String publicPlace;
+    @NotEmpty(message = "Field not completed")
     private String number;
+
     private String adjunct;
+
     private String district;
+    @NotEmpty(message = "Field not completed")
     private String cep;
 
+    @NotEmpty(message = "Field not completed")
     private String phone1;
     private String phone2;
     private String phone3;
