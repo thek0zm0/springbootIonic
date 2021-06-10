@@ -1,6 +1,7 @@
 package com.lucasmoraes.springbootIonic.services;
 
 import com.lucasmoraes.springbootIonic.domain.Category;
+import com.lucasmoraes.springbootIonic.domain.Client;
 import com.lucasmoraes.springbootIonic.dto.CategoryDto;
 import com.lucasmoraes.springbootIonic.repositories.CategoryRepository;
 import com.lucasmoraes.springbootIonic.services.exceptions.DataIntegrityException;
@@ -38,8 +39,14 @@ public class CategoryService
 
     public Category update(Category obj)
     {
-        find(obj.getId());
-        return repository.save(obj);
+        Category newObj = find(obj.getId());
+        updateData(newObj,obj);
+        return repository.save(newObj);
+    }
+
+    private void updateData(Category newObj, Category obj)
+    {
+        newObj.setName(obj.getName());
     }
 
     public void delete(Integer id)
