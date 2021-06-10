@@ -1,12 +1,14 @@
 package com.lucasmoraes.springbootIonic.dto;
 
 import com.lucasmoraes.springbootIonic.domain.Client;
+import com.lucasmoraes.springbootIonic.services.validation.ClientUpdate;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
+@ClientUpdate
 public class ClientDto implements Serializable
 {
     private static final long serialVersionUID = 1L;
