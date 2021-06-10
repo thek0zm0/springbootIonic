@@ -21,7 +21,9 @@ public class Client implements Serializable
     private String cpfOrCnpj;
     private Integer type;
 
-    @OneToMany(mappedBy = "client")
+    // Cascada all significa que toda a modificação em cliente será refletida em endereços
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Address> addresses = new ArrayList<>();
 
     @ElementCollection
