@@ -1,6 +1,7 @@
 package com.lucasmoraes.springbootIonic.services;
 
 import com.lucasmoraes.springbootIonic.domain.Category;
+import com.lucasmoraes.springbootIonic.dto.CategoryDto;
 import com.lucasmoraes.springbootIonic.repositories.CategoryRepository;
 import com.lucasmoraes.springbootIonic.services.exceptions.DataIntegrityException;
 import com.lucasmoraes.springbootIonic.services.exceptions.ObjectNotFoundException;
@@ -63,5 +64,10 @@ public class CategoryService
     {
         PageRequest pageRequest = PageRequest.of(page,linesPerPage, Sort.Direction.valueOf(direction), orderBy);
         return repository.findAll(pageRequest);
+    }
+
+    public Category fromDto(CategoryDto objDto)
+    {
+        return new Category(objDto.getId(), objDto.getName());
     }
 }

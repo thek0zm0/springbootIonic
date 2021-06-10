@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +42,9 @@ public class CategoryResource
     // Implementando POST categoria (criar nova categoria)
     // @RequestBody faz o Json ser convertido para objeto java automaticamente
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> insert(@RequestBody Category obj)
+    public ResponseEntity<Void> insert(@Valid @RequestBody CategoryDto objDto)
     {
+        Category obj = service.fromDto(objDto);
         obj = service.insert(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
@@ -50,8 +52,9 @@ public class CategoryResource
 
     // Implementando Put (atualizar categoria)
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Category obj,@PathVariable Integer id)
+    public ResponseEntity<Void> update(@Valid @RequestBody CategoryDto objDto,@PathVariable Integer id)
     {
+        Category obj = service.fromDto(objDto);
         obj.setId(id);
         obj = service.update(obj);
         return ResponseEntity.noContent().build();
