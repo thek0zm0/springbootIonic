@@ -2,6 +2,7 @@ package com.lucasmoraes.springbootIonic.resources;
 
 import com.lucasmoraes.springbootIonic.domain.Client;
 import com.lucasmoraes.springbootIonic.dto.ClientDto;
+import com.lucasmoraes.springbootIonic.dto.ClientNewDto;
 import com.lucasmoraes.springbootIonic.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,8 @@ public class ClientResource
         return ResponseEntity.noContent().build();
     }
 
+
+
     // Implementando Put (atualizar categoria)
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> update(@Valid @RequestBody ClientDto objDto,@PathVariable Integer id)
@@ -67,5 +70,14 @@ public class ClientResource
         Page<Client> list = service.findPage(page,linesPerPage,orderBy,direction);
         Page<ClientDto> listDto = list.map(obj -> new ClientDto(obj));
         return ResponseEntity.ok().body(listDto);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Void> insert(@Valid @RequestBody ClientNewDto objDto)
+    {
+        Client obj = service.fromDto(objDto);
+        obj = service.insert(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+        return ResponseEntity.created(uri).build();
     }
 }

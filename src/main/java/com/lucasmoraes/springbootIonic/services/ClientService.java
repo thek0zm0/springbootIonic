@@ -1,7 +1,13 @@
 package com.lucasmoraes.springbootIonic.services;
 
+import com.lucasmoraes.springbootIonic.domain.Address;
+import com.lucasmoraes.springbootIonic.domain.Category;
+import com.lucasmoraes.springbootIonic.domain.City;
 import com.lucasmoraes.springbootIonic.domain.Client;
+import com.lucasmoraes.springbootIonic.domain.enums.ClientType;
 import com.lucasmoraes.springbootIonic.dto.ClientDto;
+import com.lucasmoraes.springbootIonic.dto.ClientNewDto;
+import com.lucasmoraes.springbootIonic.repositories.AdressRepository;
 import com.lucasmoraes.springbootIonic.repositories.ClientRepository;
 import com.lucasmoraes.springbootIonic.services.exceptions.DataIntegrityException;
 import com.lucasmoraes.springbootIonic.services.exceptions.ObjectNotFoundException;
@@ -22,12 +28,23 @@ public class ClientService
     @Autowired
     private ClientRepository repository;
 
+    @Autowired
+    private AdressRepository adressRepository;
+
 
     public Client find(Integer id)
     {
         Optional<Client> obj = repository.findById(id);
         return obj.orElseThrow(()-> new ObjectNotFoundException(
                 "Object not found! Id: " + id + " Type: " + Client.class.getName()));
+    }
+
+    public Client insert(Client obj)
+    {
+        obj.setId(null);
+        obj = repository.save(obj);
+        adressRepository.saveAll(obj.getAdresses());
+        return obj;
     }
 
     public Client update(Client obj)
@@ -70,5 +87,23 @@ public class ClientService
     public Client fromDto(ClientDto objDto)
     {
         return new Client(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null);
+    }
+
+    public Client fromDto(ClientNewDto objDto)
+    {
+        Client cli = new Client(null,objDto.getName(), objDto.getEmail(), objDto.getCpfOrCnpj(), ClientType.toEnum(objDto.getType()));
+        City cid = new City(objDto.getCityId(), null, null);
+        Address adr = new Address(null,objDto.getPublicPlace(),objDto.getNumber(),objDto.getAdjunct(),objDto.getDistrict(),objDto.getCep(),cli,cid);
+        cli.getAdresses().add(adr);
+        cli.getPhones().add(objDto.getPhone1());
+        if(objDto.getPhone2()!=null)
+        {
+            cli.getPhones().add(objDto.getPhone2());
+        }
+        if(objDto.getPhone3()!=null)
+        {
+            cli.getPhones().add(objDto.getPhone3());
+        }
+        return cli;
     }
 }
