@@ -1,5 +1,6 @@
 package com.lucasmoraes.springbootIonic.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.lucasmoraes.springbootIonic.domain.enums.PaymentStatus;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 public abstract class Payment implements Serializable
 {
     private static final long serialVersionUID = 1L;

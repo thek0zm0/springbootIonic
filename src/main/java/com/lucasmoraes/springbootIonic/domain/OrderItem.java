@@ -1,6 +1,7 @@
 package com.lucasmoraes.springbootIonic.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.aspectj.weaver.ast.Or;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -40,6 +41,16 @@ public class OrderItem implements Serializable
     public Product getProduct()
     {
         return id.getProduct();
+    }
+
+    public void setOrder(Order order)
+    {
+        id.setOrder(order);
+    }
+
+    public void setProduct(Product product)
+    {
+        id.setProduct(product);
     }
 
     public OrderItemPk getId()
