@@ -115,7 +115,7 @@ public class DbService
 
         // Cliente e endereço
 
-        Client cli1 = new Client(null, "Maria Silva", "maria@gmail.com", "47690859489", ClientType.PHYSICALPERSON);
+        Client cli1 = new Client(null, "Maria Silva", "lucasmoraes@alunos.utfpr.edu.br", "47690859489", ClientType.PHYSICALPERSON);
         cli1.getPhones().addAll(Arrays.asList("44558892","34908722"));
 
         Address adr1 = new Address(null,"Rua flores","300","Apto 43","Jardim","09834020",cli1,ct1);
