@@ -11,6 +11,7 @@ import com.lucasmoraes.springbootIonic.services.exceptions.ObjectNotFoundExcepti
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Optional;
 
@@ -33,6 +34,9 @@ public class OrderService
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Autowired
+    private ClientService clientService;
+
 
     public Order find(Integer id)
     {
@@ -41,12 +45,17 @@ public class OrderService
                 "Object not found! Id: " + id + " Type: " + Order.class.getName()));
     }
 
+    @Transactional
     public Order insert(Order obj)
     {
         // Setando id para null (garantia)
         obj.setId(null);
         // Nova data com instante atual
         obj.setInstant(new Date());
+
+        // Setando cliente
+        obj.setClient(clientService.find(obj.getClient().getId()));
+
         // Pedido criado agora ainda estará pendente
         obj.getPayment().setStatus(PaymentStatus.PENDENT);
         // Associação de mão dupla
@@ -61,10 +70,12 @@ public class OrderService
         for(OrderItem orderItem : obj.getItems())
         {
             orderItem.setDiscount(0.0);
-            orderItem.setPrice(productService.find(orderItem.getProduct().getId()).getPrice());
+            orderItem.setProduct(productService.find(orderItem.getProduct().getId()));
+            orderItem.setPrice(orderItem.getProduct().getPrice());
             orderItem.setOrder(obj);
         }
         orderItemRepository.saveAll(obj.getItems());
+        System.out.println(obj);
         return obj;
     }
 }

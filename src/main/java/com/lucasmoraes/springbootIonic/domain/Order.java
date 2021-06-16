@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Entity
 @Table(name = "TB_ORDER")
@@ -115,6 +114,30 @@ public class Order implements Serializable
             sum += orderItem.getSubTotal();
         }
         return sum;
+    }
+
+    @Override
+    public String toString()
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
+        final StringBuilder sb = new StringBuilder("Order:: ");
+        sb.append("Order id: ");
+        sb.append(getId());
+        sb.append(", Instant: ");
+        sb.append(sdf.format(getInstant()));
+        sb.append(", Client: ");
+        sb.append(getClient().getName());
+        sb.append(", Payment Status: ");
+        sb.append(getPayment().getStatus().getDescription());
+        sb.append("\nDetails\n");
+        for (OrderItem ip : getItems())
+        {
+            sb.append(ip.toString());
+        }
+        sb.append("Total Value: ");
+        sb.append(nf.format(getTotalValue()));
+        return sb.toString();
     }
 
     @Override

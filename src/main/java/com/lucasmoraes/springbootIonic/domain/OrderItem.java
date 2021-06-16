@@ -6,6 +6,8 @@ import org.aspectj.weaver.ast.Or;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 @Entity
@@ -96,6 +98,22 @@ public class OrderItem implements Serializable
     public Double getSubTotal()
     {
         return (price-discount)*quantity;
+    }
+
+    @Override
+    public String toString()
+    {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
+        final StringBuilder sb = new StringBuilder("OrderItem:: ");
+        sb.append(getProduct().getName());
+        sb.append(", Quantity: ");
+        sb.append(getQuantity());
+        sb.append(", Price: ");
+        sb.append(nf.format(getPrice()));
+        sb.append(", Subtotal: ");
+        sb.append(nf.format(getSubTotal()));
+        sb.append("\n");
+        return sb.toString();
     }
 
     @Override
