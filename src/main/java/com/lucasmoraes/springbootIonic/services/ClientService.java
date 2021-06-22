@@ -16,6 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,8 @@ import java.util.Optional;
 @Service
 public class ClientService
 {
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     private ClientRepository repository;
@@ -86,12 +89,12 @@ public class ClientService
 
     public Client fromDto(ClientDto objDto)
     {
-        return new Client(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null);
+        return new Client(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null,null);
     }
 
     public Client fromDto(ClientNewDto objDto)
     {
-        Client cli = new Client(null,objDto.getName(), objDto.getEmail(), objDto.getCpfOrCnpj(), ClientType.toEnum(objDto.getType()));
+        Client cli = new Client(null,objDto.getName(), objDto.getEmail(), objDto.getCpfOrCnpj(), ClientType.toEnum(objDto.getType()), bCryptPasswordEncoder.encode(objDto.getPassword()));
         City cid = new City(objDto.getCityId(), null, null);
         Address adr = new Address(null,objDto.getPublicPlace(),objDto.getNumber(),objDto.getAdjunct(),objDto.getDistrict(),objDto.getCep(),cli,cid);
         cli.getAdresses().add(adr);

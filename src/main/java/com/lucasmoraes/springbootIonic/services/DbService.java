@@ -5,6 +5,7 @@ import com.lucasmoraes.springbootIonic.domain.enums.ClientType;
 import com.lucasmoraes.springbootIonic.domain.enums.PaymentStatus;
 import com.lucasmoraes.springbootIonic.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -40,6 +41,9 @@ public class DbService
 
     @Autowired
     private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public void instantiateTestDatabase() throws ParseException
     {
@@ -115,7 +119,7 @@ public class DbService
 
         // Cliente e endereço
 
-        Client cli1 = new Client(null, "Maria Silva", "lucasmoraes@alunos.utfpr.edu.br", "47690859489", ClientType.PHYSICALPERSON);
+        Client cli1 = new Client(null, "Maria Silva", "lucasmoraes@alunos.utfpr.edu.br", "47690859489", ClientType.PHYSICALPERSON, bCryptPasswordEncoder.encode("laranjinha"));
         cli1.getPhones().addAll(Arrays.asList("44558892","34908722"));
 
         Address adr1 = new Address(null,"Rua flores","300","Apto 43","Jardim","09834020",cli1,ct1);

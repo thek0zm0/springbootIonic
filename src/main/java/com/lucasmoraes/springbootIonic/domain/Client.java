@@ -22,6 +22,8 @@ public class Client implements Serializable
     private String email;
     private String cpfOrCnpj;
     private Integer type;
+    @JsonIgnore
+    private String password;
 
     // Cascada all significa que toda a modificação em cliente será refletida em endereços
 
@@ -38,13 +40,14 @@ public class Client implements Serializable
 
     public Client(){}
 
-    public Client(Integer id, String name, String email, String cpfOrCnpj, ClientType type)
+    public Client(Integer id, String name, String email, String cpfOrCnpj, ClientType type, String password)
     {
         this.id = id;
         this.name = name;
         this.email = email;
         this.cpfOrCnpj = cpfOrCnpj;
         this.type = (type==null) ? null : type.getCod();
+        this.password = password;
     }
 
     public Integer getId()
@@ -125,6 +128,16 @@ public class Client implements Serializable
     public void setOrders(List<Order> orders)
     {
         this.orders = orders;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
     }
 
     @Override
