@@ -3,6 +3,7 @@ package com.lucasmoraes.springbootIonic.services;
 import com.lucasmoraes.springbootIonic.domain.*;
 import com.lucasmoraes.springbootIonic.domain.enums.ClientType;
 import com.lucasmoraes.springbootIonic.domain.enums.PaymentStatus;
+import com.lucasmoraes.springbootIonic.domain.enums.Profile;
 import com.lucasmoraes.springbootIonic.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -120,20 +121,27 @@ public class DbService
         // Cliente e endereço
 
         Client cli1 = new Client(null, "Maria Silva", "lucasmoraes@alunos.utfpr.edu.br", "47690859489", ClientType.PHYSICALPERSON, bCryptPasswordEncoder.encode("laranjinha"));
+
         cli1.getPhones().addAll(Arrays.asList("44558892","34908722"));
+
+        Client cli2 = new Client(null, "Ana Costa", "luc2236@hotmail.com", "47368294869", ClientType.PHYSICALPERSON, bCryptPasswordEncoder.encode("laranjinha"));
+        cli2.getPhones().addAll(Arrays.asList("445256892","34098672"));
+        cli2.addProfile(Profile.ADMIN);
 
         Address adr1 = new Address(null,"Rua flores","300","Apto 43","Jardim","09834020",cli1,ct1);
         Address adr2 = new Address(null, "Avenida Matos","105","Sala 80","Centro","02832049",cli1,ct2);
+        Address adr3= new Address(null, "Avenida Floriano","2105",null,"Centro","008432750",cli2,ct2);
 
-        clientRepository.saveAll(Arrays.asList(cli1));
-        adressRepository.saveAll(Arrays.asList(adr1,adr2));
+        clientRepository.saveAll(Arrays.asList(cli1,cli2));
+        adressRepository.saveAll(Arrays.asList(adr1,adr2,adr3));
         clientRepository.flush();
         adressRepository.flush();
 
         cli1.getAdresses().addAll(Arrays.asList(adr1,adr2));
+        cli2.getAdresses().add(adr3);
 
-        clientRepository.saveAll(Arrays.asList(cli1));
-        adressRepository.saveAll(Arrays.asList(adr1,adr2));
+        clientRepository.saveAll(Arrays.asList(cli1,cli2));
+        adressRepository.saveAll(Arrays.asList(adr1,adr2,adr3));
 
         // Pedido e pagamento
 

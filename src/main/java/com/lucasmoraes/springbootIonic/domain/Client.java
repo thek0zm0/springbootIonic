@@ -1,10 +1,12 @@
 package com.lucasmoraes.springbootIonic.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lucasmoraes.springbootIonic.domain.enums.ClientType;
+import com.lucasmoraes.springbootIonic.domain.enums.Profile;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "TB_CLIENT")
@@ -34,11 +36,18 @@ public class Client implements Serializable
     @CollectionTable(name = "PHONES")
     private Set<String> phones = new HashSet<>();
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "PROFILES")
+    private Set<Integer> profiles = new HashSet<>();
+
     @JsonIgnore
     @OneToMany(mappedBy = "client")
     private List<Order> orders = new ArrayList<>();
 
-    public Client(){}
+    public Client()
+    {
+        addProfile(Profile.CLIENT);
+    }
 
     public Client(Integer id, String name, String email, String cpfOrCnpj, ClientType type, String password)
     {
@@ -48,6 +57,7 @@ public class Client implements Serializable
         this.cpfOrCnpj = cpfOrCnpj;
         this.type = (type==null) ? null : type.getCod();
         this.password = password;
+        addProfile(Profile.CLIENT);
     }
 
     public Integer getId()
@@ -138,6 +148,16 @@ public class Client implements Serializable
     public void setPassword(String password)
     {
         this.password = password;
+    }
+
+    public Set<Profile> getProfile()
+    {
+        return profiles.stream().map(x-> Profile.toEnum(x)).collect(Collectors.toSet());
+    }
+
+    public void addProfile(Profile profile)
+    {
+        profiles.add(profile.getCod());
     }
 
     @Override
