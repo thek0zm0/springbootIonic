@@ -1,6 +1,7 @@
 package com.lucasmoraes.springbootIonic.config;
 
 import com.lucasmoraes.springbootIonic.security.JwtAuthenticationFilter;
+import com.lucasmoraes.springbootIonic.security.JwtAuthorizationFilter;
 import com.lucasmoraes.springbootIonic.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -59,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers(PUBLIC_MATCHERS).permitAll()
                 .anyRequest().authenticated();
         http.addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil));
+        http.addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
