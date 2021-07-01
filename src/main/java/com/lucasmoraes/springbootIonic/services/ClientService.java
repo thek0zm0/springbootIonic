@@ -5,10 +5,13 @@ import com.lucasmoraes.springbootIonic.domain.Category;
 import com.lucasmoraes.springbootIonic.domain.City;
 import com.lucasmoraes.springbootIonic.domain.Client;
 import com.lucasmoraes.springbootIonic.domain.enums.ClientType;
+import com.lucasmoraes.springbootIonic.domain.enums.Profile;
 import com.lucasmoraes.springbootIonic.dto.ClientDto;
 import com.lucasmoraes.springbootIonic.dto.ClientNewDto;
 import com.lucasmoraes.springbootIonic.repositories.AdressRepository;
 import com.lucasmoraes.springbootIonic.repositories.ClientRepository;
+import com.lucasmoraes.springbootIonic.security.UserSS;
+import com.lucasmoraes.springbootIonic.services.exceptions.AuthorizationException;
 import com.lucasmoraes.springbootIonic.services.exceptions.DataIntegrityException;
 import com.lucasmoraes.springbootIonic.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,13 @@ public class ClientService
 
     public Client find(Integer id)
     {
+        UserSS user = UserService.authenticated();
+
+        if(user==null || !user.hasRole(Profile.ADMIN) && id.equals(user.getId()))
+        {
+            throw new AuthorizationException("Forbidden");
+        }
+
         Optional<Client> obj = repository.findById(id);
         return obj.orElseThrow(()-> new ObjectNotFoundException(
                 "Object not found! Id: " + id + " Type: " + Client.class.getName()));

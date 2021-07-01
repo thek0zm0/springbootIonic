@@ -1,5 +1,6 @@
 package com.lucasmoraes.springbootIonic.resources.exceptions;
 
+import com.lucasmoraes.springbootIonic.services.exceptions.AuthorizationException;
 import com.lucasmoraes.springbootIonic.services.exceptions.DataIntegrityException;
 import com.lucasmoraes.springbootIonic.services.exceptions.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,13 @@ public class ResourceExceptionHandler
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<StandardError> Authorization(AuthorizationException e, HttpServletRequest request)
+    {
+        StandardError err = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
     }
 
 }
