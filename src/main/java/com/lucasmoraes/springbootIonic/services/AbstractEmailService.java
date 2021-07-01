@@ -1,5 +1,6 @@
 package com.lucasmoraes.springbootIonic.services;
 
+import com.lucasmoraes.springbootIonic.domain.Client;
 import com.lucasmoraes.springbootIonic.domain.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,5 +76,23 @@ public abstract class AbstractEmailService implements EmailService
         mimeMessageHelper.setSentDate(new Date(System.currentTimeMillis()));
         mimeMessageHelper.setText(htmlFromTemplateOrder(obj), true);
         return mimeMessage;
+    }
+
+    @Override
+    public void sendNewPasswordEmail(Client client, String newPass)
+    {
+        SimpleMailMessage sm = prepareNewPasswordEmail(client, newPass);
+        sendEmail(sm);
+    }
+
+    protected SimpleMailMessage prepareNewPasswordEmail(Client client, String newPass)
+    {
+        SimpleMailMessage sm = new SimpleMailMessage();
+        sm.setTo(client.getEmail());
+        sm.setFrom(sender);
+        sm.setSubject("New Password Requested");
+        sm.setSentDate(new Date(System.currentTimeMillis()));
+        sm.setText("New Password: " + newPass);
+        return sm;
     }
 }

@@ -1,5 +1,6 @@
 package com.lucasmoraes.springbootIonic.services;
 
+import com.lucasmoraes.springbootIonic.domain.Client;
 import com.lucasmoraes.springbootIonic.domain.Order;
 import org.springframework.mail.SimpleMailMessage;
 import javax.mail.internet.MimeMessage;
@@ -13,5 +14,7 @@ public interface EmailService
     void sendOrderConfirmationHtmlEmail(Order obj);
 
     void sendHtmlEmail(MimeMessage msg);
+
+    void sendNewPasswordEmail(Client client, String newPass);
 
 }
