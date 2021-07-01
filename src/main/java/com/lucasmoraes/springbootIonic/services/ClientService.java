@@ -42,9 +42,9 @@ public class ClientService
     {
         UserSS user = UserService.authenticated();
 
-        if(user==null || !user.hasRole(Profile.ADMIN) && id.equals(user.getId()))
+        if(user==null || !user.hasRole(Profile.ADMIN) && !id.equals(user.getId()))
         {
-            throw new AuthorizationException("Forbidden");
+            throw new AuthorizationException("Forbidden 01");
         }
 
         Optional<Client> obj = repository.findById(id);

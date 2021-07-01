@@ -1,14 +1,17 @@
 package com.lucasmoraes.springbootIonic.services;
 
-import com.lucasmoraes.springbootIonic.domain.BilletPayment;
-import com.lucasmoraes.springbootIonic.domain.Order;
-import com.lucasmoraes.springbootIonic.domain.OrderItem;
+import com.lucasmoraes.springbootIonic.domain.*;
 import com.lucasmoraes.springbootIonic.domain.enums.PaymentStatus;
 import com.lucasmoraes.springbootIonic.repositories.OrderItemRepository;
 import com.lucasmoraes.springbootIonic.repositories.OrderRepository;
 import com.lucasmoraes.springbootIonic.repositories.PaymentRepository;
+import com.lucasmoraes.springbootIonic.security.UserSS;
+import com.lucasmoraes.springbootIonic.services.exceptions.AuthorizationException;
 import com.lucasmoraes.springbootIonic.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -80,5 +83,17 @@ public class OrderService
         orderItemRepository.saveAll(obj.getItems());
         emailService.sendOrderConfirmationHtmlEmail(obj);
         return obj;
+    }
+
+    public Page<Order> findPage(Integer page, Integer linesPerPage, String orderBy, String direction)
+    {
+        UserSS user = UserService.authenticated();
+        if(user==null)
+        {
+            throw new AuthorizationException("Forbidden 02");
+        }
+        PageRequest pageRequest = PageRequest.of(page,linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        Client client = clientService.find(user.getId());
+        return repository.findByClient(client, pageRequest);
     }
 }
