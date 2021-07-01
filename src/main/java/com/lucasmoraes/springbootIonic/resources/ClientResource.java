@@ -7,6 +7,7 @@ import com.lucasmoraes.springbootIonic.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,6 +32,7 @@ public class ClientResource
         return ResponseEntity.ok().body(obj);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@PathVariable Integer id)
     {
@@ -51,6 +53,7 @@ public class ClientResource
     }
 
     // Mostrar todas as categorias
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<ClientDto>> findAll()
     {
@@ -60,6 +63,7 @@ public class ClientResource
     }
 
     // Mostrar categorias com paginacao
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/page",method = RequestMethod.GET)
     public ResponseEntity<Page<ClientDto>> findPage(
             @RequestParam(value = "page",defaultValue = "0") Integer page,

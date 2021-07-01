@@ -6,6 +6,7 @@ import com.lucasmoraes.springbootIonic.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -32,6 +33,7 @@ public class CategoryResource
     }
 
     // Deletando Categoria
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@PathVariable Integer id)
     {
@@ -41,6 +43,7 @@ public class CategoryResource
 
     // Implementando POST categoria (criar nova categoria)
     // @RequestBody faz o Json ser convertido para objeto java automaticamente
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> insert(@Valid @RequestBody CategoryDto objDto)
     {
@@ -50,6 +53,7 @@ public class CategoryResource
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     // Implementando Put (atualizar categoria)
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> update(@Valid @RequestBody CategoryDto objDto,@PathVariable Integer id)
