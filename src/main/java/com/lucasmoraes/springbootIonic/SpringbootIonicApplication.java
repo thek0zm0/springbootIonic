@@ -16,8 +16,6 @@ import java.util.Arrays;
 @SpringBootApplication
 public class SpringbootIonicApplication implements CommandLineRunner
 {
-	@Autowired
-	private S3service s3service;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootIonicApplication.class, args);
@@ -26,6 +24,6 @@ public class SpringbootIonicApplication implements CommandLineRunner
 	@Override
 	public void run(String... args) throws Exception
 	{
-		s3service.uploadFile("C:\\Users\\Luck\\Pictures\\kozmoll.jpg");
+
 	}
 }

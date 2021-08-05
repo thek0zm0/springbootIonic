@@ -15,13 +15,17 @@ import com.lucasmoraes.springbootIonic.services.exceptions.AuthorizationExceptio
 import com.lucasmoraes.springbootIonic.services.exceptions.DataIntegrityException;
 import com.lucasmoraes.springbootIonic.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.image.BufferedImage;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +41,17 @@ public class ClientService
     @Autowired
     private AdressRepository adressRepository;
 
+    @Autowired
+    private S3service s3service;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Value("${img.prefix.client.profile}")
+    private String prefix;
+
+    @Value("${img.profile.size}")
+    private Integer size;
 
     public Client find(Integer id)
     {
@@ -119,4 +134,22 @@ public class ClientService
         }
         return cli;
     }
+
+    public URI uploadProfilePicture(MultipartFile multipartFile)
+    {
+        UserSS user = UserService.authenticated();
+        if(user==null)
+        {
+            throw new AuthorizationException("Access negated");
+        }
+
+        BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+        jpgImage = imageService.cropSquare(jpgImage);
+        jpgImage = imageService.resize(jpgImage, size);
+
+        String fileName = prefix + user.getId() + ".jpg";
+
+        return s3service.uploadFile(imageService.getInputStream(jpgImage, "png"), fileName, "image");
+    }
+
 }

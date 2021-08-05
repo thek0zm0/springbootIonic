@@ -3,14 +3,21 @@ package com.lucasmoraes.springbootIonic.services;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.lucasmoraes.springbootIonic.services.exceptions.FileException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Service
 public class S3service
@@ -23,23 +30,32 @@ public class S3service
     @Value("${s3.bucket}")
     private String bucketName;
 
-    public void uploadFile(String localFilePath)
+    public URI uploadFile(MultipartFile multipartFile)
+    {
+        try {
+            String fileName = multipartFile.getOriginalFilename();
+            InputStream is = multipartFile.getInputStream();
+            String contentType = multipartFile.getContentType();
+            return uploadFile(is,fileName,contentType);
+        } catch (IOException e) {
+            throw new FileException("Io error"+e.getMessage());
+        }
+    }
+
+    public URI uploadFile(InputStream is, String fileName, String contentType)
     {
         try
         {
-            File file = new File(localFilePath);
+            ObjectMetadata meta = new ObjectMetadata();
+            meta.setContentType(contentType);
             LOG.info("Initiating upload");
-            s3client.putObject(new PutObjectRequest(bucketName, "test.jpg", file));
+            s3client.putObject(bucketName,fileName,is,meta);
             LOG.info("Upload success");
+            return s3client.getUrl(bucketName,fileName).toURI();
         }
-        catch (AmazonServiceException e)
-        {
-            LOG.info("AmazonServiceException: " + e.getErrorMessage());
-            LOG.info("Status Code: " + e.getErrorCode());
-        }
-        catch (AmazonClientException e)
-        {
-            LOG.info("AmazonClientException: " + e.getMessage());
+        catch (URISyntaxException e) {
+           throw new FileException("Error converting url to uri");
         }
     }
+
 }
